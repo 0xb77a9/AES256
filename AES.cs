@@ -5,9 +5,6 @@ using System.Text;
 
 namespace AES256
 {
-    /// <summary>
-    /// AES256 class implements the OpenSSL compatible cipher AES/256/CBC/PKCS7
-    /// </summary>
     public class AES_256
     {
         public const int BlockSize = 16;
@@ -16,24 +13,11 @@ namespace AES256
 
         private byte[] key;
         private byte[] iv;
-
-        /// <summary>
-        /// Encrypt input text with the password using random salt.
-        /// Returns base64 decoded encrypted string.
-        /// </summary>
-        /// <param name="text">Input text to encrypt</param>
-        /// <param name="passphrase">Passphrase</param>
         public string Encrypt ( string text, string passphrase )
         {
             return Encrypt( Encoding.UTF8.GetBytes( text ), passphrase );
         }
 
-        /// <summary>
-        /// Encrypt input bytes with the password using random salt.
-        /// Returns base64 decoded encrypted string.
-        /// </summary>
-        /// <param name="data">Input data (in bytes) to encrypt</param>
-        /// <param name="passphrase">Passphrase</param>
         public string Encrypt ( byte[] data, string passphrase )
         {
             using ( var random = new RNGCryptoServiceProvider() )
@@ -66,24 +50,11 @@ namespace AES256
                 return System.Convert.ToBase64String( Concat( Concat( "Salted__", salt ), encrypted ) );
             }
         }
-
-        /// <summary>
-        /// Derypt encrypted text with the password using random salt.
-        /// Returns the decrypted string.
-        /// </summary>
-        /// <param name="encrypted">Encrypted text to decrypt</param>
-        /// <param name="passphrase">Passphrase</param>
         public string Decrypt ( string encrypted, string passphrase )
         {
             return Encoding.UTF8.GetString( DecryptToBytes( encrypted, passphrase ) );
         }
 
-        /// <summary>
-        /// Derypt encrypted data with the password using random salt.
-        /// Returns the decrypted bytes.
-        /// </summary>
-        /// <param name="encrypted">Encrypted data to decrypt</param>
-        /// <param name="passphrase">Passphrase</param>
         public byte[] DecryptToBytes ( string encrypted, string passphrase )
         {
 
@@ -140,12 +111,6 @@ namespace AES256
                 return barr;
             }
         }
-
-        /// <summary>
-        /// Derive key and iv.
-        /// </summary>
-        /// <param name="passphrase">Passphrase</param>
-        /// <param name="salt">Salt</param>
         protected void DeriveKeyAndIv ( string passphrase, byte[] salt )
         {
             MD5 md5 = MD5.Create();
