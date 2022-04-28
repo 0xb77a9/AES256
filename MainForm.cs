@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -147,19 +147,19 @@ namespace AES256
                 else
                 {
                     var TempEncrypted = AES.Encrypt( File.ReadAllText( textBox9.Text, Encoding.Default ), textBox8.Text );
-                    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-                    saveFileDialog1.InitialDirectory = Path.GetFullPath( label13.Text );
-                    saveFileDialog1.Title = "Save encrypted file";
-                    saveFileDialog1.CheckPathExists = true;
-                    saveFileDialog1.DefaultExt = Path.GetExtension( label13.Text );
-                    saveFileDialog1.Filter = Path.GetExtension( textBox9.Text.Replace( ".", "" ) ) + " files (*" + Path.GetExtension( textBox9.Text ) + ")|*" + Path.GetExtension( textBox9.Text ) + "";
-                    saveFileDialog1.FilterIndex = 2;
-                    saveFileDialog1.RestoreDirectory = true;
-                    saveFileDialog1.FileName = Path.GetFileName( textBox9.Text.Replace( Path.GetExtension( textBox9.Text ), "" ) ) + "_BETA_Encryption" + Path.GetExtension( textBox9.Text );
-                    if ( saveFileDialog1.ShowDialog() == DialogResult.OK )
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.InitialDirectory = Path.GetFullPath( label13.Text );
+                    saveFileDialog.Title = "Save encrypted file";
+                    saveFileDialog.CheckPathExists = true;
+                    saveFileDialog.DefaultExt = Path.GetExtension( label13.Text );
+                    saveFileDialog.Filter = Path.GetExtension( textBox9.Text.Replace( ".", "" ) ) + " files (*" + Path.GetExtension( textBox9.Text ) + ")|*" + Path.GetExtension( textBox9.Text ) + "";
+                    saveFileDialog.FilterIndex = 2;
+                    saveFileDialog.RestoreDirectory = true;
+                    saveFileDialog.FileName = Path.GetFileName( textBox9.Text.Replace( Path.GetExtension( textBox9.Text ), "" ) ) + "_BETA_Encryption" + Path.GetExtension( textBox9.Text );
+                    if ( saveFileDialog.ShowDialog() == DialogResult.OK )
                     {
-                        File.WriteAllText( saveFileDialog1.FileName, TempEncrypted, Encoding.Default );
-                        textBox10.Text = saveFileDialog1.FileName;
+                        File.WriteAllText( saveFileDialog.FileName, TempEncrypted, Encoding.Default );
+                        textBox10.Text = saveFileDialog.FileName;
                         textBox7.Text = textBox8.Text;
                     }
                 }
@@ -169,7 +169,38 @@ namespace AES256
                 MessageBox.Show( "An error occurred" );
             }
         }
-
+        private void button9_Click ( object sender, EventArgs e )
+        {
+            try
+            {
+                if ( textBox7.Text.Length <= 31 )
+                {
+                    MessageBox.Show( "Your password must be 32 Lengh or more" );
+                }
+                else
+                {
+                    var shit = File.ReadAllText( textBox10.Text, Encoding.Default );
+                    string shit2 = AES.Decrypt( shit, textBox7.Text );
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.InitialDirectory = Path.GetFullPath( textBox10.Text );
+                    saveFileDialog.Title = "Save decrypted file";
+                    saveFileDialog.CheckPathExists = true;
+                    saveFileDialog.DefaultExt = Path.GetExtension( textBox10.Text );
+                    saveFileDialog.Filter = Path.GetExtension( textBox10.Text.Replace( ".", "" ) ) + " files (*" + Path.GetExtension( textBox10.Text ) + ")|*" + Path.GetExtension( textBox10.Text ) + "";
+                    saveFileDialog.FilterIndex = 2;
+                    saveFileDialog.RestoreDirectory = true;
+                    saveFileDialog.FileName = Path.GetFileName( textBox10.Text.Replace( "_BETA_Encryption", "" ) );
+                    if ( saveFileDialog.ShowDialog() == DialogResult.OK )
+                    {
+                        File.WriteAllText( saveFileDialog.FileName, shit2, Encoding.Default );
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show( "An error occurred" );
+            }
+        }
         private void button2_Click ( object sender, EventArgs e )
         {
             try
@@ -210,39 +241,6 @@ namespace AES256
                         return;
                     }
                     textBox4.Text = AES.Decrypt( textBox6.Text, textBox5.Text );
-                }
-            }
-            catch
-            {
-                MessageBox.Show( "An error occurred" );
-            }
-        }
-
-        private void button9_Click ( object sender, EventArgs e )
-        {
-            try
-            {
-                if ( textBox7.Text.Length <= 31 )
-                {
-                    MessageBox.Show( "Your password must be 32 Lengh or more" );
-                }
-                else
-                {
-                    var shit = File.ReadAllText( textBox10.Text, Encoding.Default );
-                    string shit2 = AES.Decrypt( shit, textBox7.Text );
-                    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-                    saveFileDialog1.InitialDirectory = Path.GetFullPath( textBox10.Text );
-                    saveFileDialog1.Title = "Save decrypted file";
-                    saveFileDialog1.CheckPathExists = true;
-                    saveFileDialog1.DefaultExt = Path.GetExtension( textBox10.Text );
-                    saveFileDialog1.Filter = Path.GetExtension( textBox10.Text.Replace( ".", "" ) ) + " files (*" + Path.GetExtension( textBox10.Text ) + ")|*" + Path.GetExtension( textBox10.Text ) + "";
-                    saveFileDialog1.FilterIndex = 2;
-                    saveFileDialog1.RestoreDirectory = true;
-                    saveFileDialog1.FileName = Path.GetFileName(textBox10.Text.Replace( "_BETA_Encryption", "" ));
-                    if ( saveFileDialog1.ShowDialog() == DialogResult.OK )
-                    {
-                        File.WriteAllText( saveFileDialog1.FileName, shit2, Encoding.Default );
-                    }
                 }
             }
             catch
